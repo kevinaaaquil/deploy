@@ -1,0 +1,9 @@
+# grafana/provisioning/datasources/loki.yaml
+apiVersion: 1
+datasources:
+  - name: Loki1
+    type: loki
+    access: proxy
+    url: http://13.234.37.120:3100
+    jsonData:
+      maxLines: 10000

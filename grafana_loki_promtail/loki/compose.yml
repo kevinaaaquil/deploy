@@ -1,0 +1,19 @@
+# loki/docker-compose.yml
+version: '3'
+
+services:
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config:/etc/loki
+      - ./data:/loki
+    command: -config.file=/etc/loki/loki-config.yaml -config.expand-env=true
+    restart: unless-stopped
+
+networks:
+  default:
+    name: loki-network
+    driver: bridge
