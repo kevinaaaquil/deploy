@@ -1,0 +1,37 @@
+uninstall control k3s:
+sudo /usr/local/bin/k3s-uninstall.sh
+
+
+install control plane:
+curl -sfL https://get.k3s.io | sh -s -  --flannel-backend=wireguard-native   --node-external-ip=3.108.131.237
+
+
+get node token:
+cat /var/lib/rancher/k3s/server/node-token
+
+
+install node:
+curl -sfL https://get.k3s.io | K3S_URL=https://myserver:6443 K3S_TOKEN=mynodetoken sh -
+
+install helm (live on the edge):
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+attach helm to k3s config:
+# Check if the kubeconfig is properly set
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+# Or use it directly with helm
+helm list --kubeconfig /etc/rancher/k3s/k3s.yaml
+
+install grafana using helm:
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+kubectl create namespace <NAMESPACE>
+
+install alloy:
+helm install --namespace <NAMESPACE> <RELEASE_NAME> grafana/alloy
+
+download values.yaml
+wget https://raw.githubusercontent.com/grafana/alloy/main/operations/helm/charts/alloy/values.yaml
+
+install loki:
+helm install  --values loki.values.yaml --namespace monitoring  grafana-loki  grafana/loki
